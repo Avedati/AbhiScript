@@ -1,0 +1,18 @@
+CALL = call VAR (expr ...)
+RAW_PYTHON = raw_python STR
+ARRAY = array (expr ...)
+base = (NUM or STR or VAR or RAW_PYTHON or CALL or ARRAY or IF)
+atom = base (+ or -) base 
+expr = atom (* / or %) atom
+statement = 
+	set VAR = expr
+	or
+	fn VAR (VAR ...) (statement ...) nf
+	or
+	while expr (statement ...) elihw
+	or
+	CALL
+	or
+	RAW_PYTHON
+	or
+	IF
