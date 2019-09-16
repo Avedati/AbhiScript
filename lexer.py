@@ -101,8 +101,8 @@ class Token:
 """
 class Tokenizer:
 
-	ATOM_OPERATORS = ['+', '-'] # The valid operators that can act on a base (a number, string, variable, or function call).
-	EXPR_OPERATORS = ['*', '/', '%'] # The valid operators that can act on an atom (an base + or - a base).
+	ATOM_OPERATORS = ['*', '/', '%'] # The valid operators that can act on a base (a number, string, variable, or function call).
+	EXPR_OPERATORS = ['+', '-'] # The valid operators that can act on an atom (an base *, /, or % a base).
 	TOKENS = ['='] # Other tokens
 	PUNC = ['(',')'] # Punctuation marks
 
