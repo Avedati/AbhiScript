@@ -1,0 +1,6 @@
+set x = 0
+while call neq(x 10) (
+	set x = x + 1
+)
+
+call assert_eq(x 10)

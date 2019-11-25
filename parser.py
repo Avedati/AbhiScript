@@ -156,7 +156,11 @@ class Parser:
 					if python_src[i] == '#':
 						end = i
 						break
-				new_python_src += str(self.symbolTable[python_src[start:end]])
+				val = self.symbolTable[python_src[start:end]]
+				if type(val) == str:
+					new_python_src += '\'' + val + '\''
+				else:
+					new_python_src += str(val)
 				i = end
 			else:
 				new_python_src += python_src[i]
@@ -265,7 +269,10 @@ class Parser:
 				return self.parseArray()
 			else:
 				self.pos += 1
-				return self.symbolTable[self.tokens[self.pos - 1].getLexeme()]
+				try:
+					return self.symbolTable[self.tokens[self.pos - 1].getLexeme()]
+				except KeyError:
+					return self.symbolTable['__' + self.tokens[self.pos - 1].getLexeme()]
 		
 		raise ParsingException('Excepted base, got {}'.format(self.tokens[self.pos].getLexeme()))
 
@@ -284,7 +291,11 @@ class Parser:
 		result = self.parseBase()
 		while not self.end() and self.tokens[self.pos].getLexeme() in Tokenizer.ATOM_OPERATORS:
 			op = self.expectType('OPR').getLexeme()
-			result = eval('result' + str(op) + str(self.parseBase()))
+			base = self.parseBase()
+			if type(base) == str:
+				result = eval('result' + str(op) + '\'' + base + '\'')
+			else:
+				result = eval('result' + str(op) + str(base))
 		return result
 	
 	"""
@@ -302,8 +313,11 @@ class Parser:
 		result = self.parseAtom()
 		while not self.end() and self.tokens[self.pos].getLexeme() in Tokenizer.EXPR_OPERATORS:
 			op = self.expectType('OPR').getLexeme()
-			self.pos += 1
-			result = eval('result' + op + self.parseAtom())
+			atom = self.parseAtom()
+			if type(atom) == str:
+				result = eval('result' + str(op) + '\'' + atom + '\' if type(result) != int or op != \'+\' else str(result) + atom')
+			else:
+				result = eval('result' + str(op) + str(atom) + 'if not type(result) in [int,str] or not type(atom) in [int, str] or type(atom) == type(result) or op != \'+\' else str(result) + str(atom)')
 		return result
 
 	"""
@@ -349,9 +363,15 @@ class Parser:
 		self.expectLexeme(')')
 		statements = []
 		self.expectLexeme('(')
+		numLeftBraces = 1
 		statements.append(self.pos)
-		while not self.end() and self.tokens[self.pos].getLexeme() != ')':
+		while not self.end() and numLeftBraces > 0:
+			if self.tokens[self.pos].getLexeme() == '(':
+				numLeftBraces += 1
+			elif self.tokens[self.pos].getLexeme() == ')':
+				numLeftBraces -= 1
 			self.pos += 1
+		self.pos -= 1
 		statements.append(self.pos)
 		self.expectLexeme(')')
 		self.symbolTable[fnname] = {
@@ -385,7 +405,14 @@ class Parser:
 			while not self.end() and self.tokens[self.pos].getLexeme() != ')':
 				self.parseStatement()
 			self.pos = pos
-		self.expectLexeme(')')
+		self.expectLexeme('(')
+		numLeftBraces = 1
+		while not self.end() and numLeftBraces > 0:
+			if self.tokens[self.pos].getLexeme() == '(':
+				numLeftBraces += 1
+			elif self.tokens[self.pos].getLexeme() == ')':
+				numLeftBraces -= 1
+			self.pos += 1
 
 	"""
 	

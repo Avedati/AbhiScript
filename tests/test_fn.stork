@@ -1,0 +1,2 @@
+fn test() ( 0 )
+call assert_eq(call test() 0)

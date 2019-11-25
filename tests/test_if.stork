@@ -1,0 +1,17 @@
+if 1 (
+	set x = 1
+)
+else (
+	set x = 0
+)
+
+call assert_eq(x 1)
+
+if 0 (
+	set x = 1
+)
+else (
+	set x = 0
+)
+
+call assert_eq(x 0)

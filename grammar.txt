@@ -1,18 +1,23 @@
-CALL = call VAR (expr ...)
-RAW_PYTHON = raw_python STR
-ARRAY = array (expr ...)
-base = (NUM or STR or VAR or RAW_PYTHON or CALL or ARRAY or IF)
-atom = base (+ or -) base 
-expr = atom (* / or %) atom
-statement = 
-	set VAR = expr
-	or
-	fn VAR (VAR ...) (statement ...) nf
-	or
-	while expr (statement ...) elihw
-	or
-	CALL
-	or
-	RAW_PYTHON
-	or
-	IF
+comment = ;*;
+
+num          -->   [0-9]+.[0-9]+
+str          -->   ("""*""" | "'"*"'")
+var          -->   [a-zA-Z_]+
+
+set          -->   "set" VAR "=" expr
+fn           -->   "fn" VAR vars statements
+while        -->   "while" expr statements
+call         -->   "call" VAR exprs
+raw_python   -->   "raw_python_eval" STR | "raw_python_exec" STR
+array        -->   "array" "(" exprs ")"
+if_block_1   -->   "if" expr "(" statements ")"
+if           -->   if_block_1 | if_block_1 "else" "(" statements ")"
+
+base         -->   num | str | var | raw_python | call | array | if
+atom         -->   base ("+" | "-") base 
+expr         -->   atom ("*" | "/" | "%") atom
+exprs        -->   expr | expr exprs
+
+vars         -->   var | var vars
+statement    -->   set | fn | while | call | raw_python | if
+statements   -->   statement | statement statements

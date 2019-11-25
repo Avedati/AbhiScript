@@ -168,7 +168,14 @@ class Tokenizer:
 	def tokenize(self):
 		tokens = []
 		while not self.end():
-			if self.source[self.pos].isdigit() or self.source[self.pos] == '.':
+			if self.source[self.pos] == ';':
+				self.pos += 1
+				while self.source[self.pos] != ';':
+					if self.source[self.pos] == '\\':
+						self.pos += 1
+					self.pos += 1
+				self.pos += 1
+			elif self.source[self.pos].isdigit() or self.source[self.pos] == '.':
 				tokens.append(Token('NUM', self.advance_while(lambda ch: ch.isdigit() or ch == '.')))
 				self.pos -= 1
 			elif self.source[self.pos] in '\'"':

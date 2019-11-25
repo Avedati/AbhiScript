@@ -1,0 +1,9 @@
+set x = raw_python_eval '1 + 2'
+call assert_eq(x 3)
+
+set y = raw_python_eval "'foo' + 'woo'"
+call assert_eq(y "foowoo")
+
+set z = raw_python_eval "str(#x#) + #y#"
+call assert_eq(z x + y)
+call assert_eq(z '3foowoo')

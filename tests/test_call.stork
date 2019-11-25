@@ -1,0 +1,11 @@
+fn return_test_1() ( 1 )
+fn return_test_2() ( 1.0 )
+fn return_test_3() ( 'foo' )
+
+set result_1 = call return_test_1()
+set result_2 = call return_test_2()
+set result_3 = call return_test_3()
+
+call assert_eq(result_1 1)
+call assert_eq(result_2 1.0)
+call assert_eq(result_3 'foo')

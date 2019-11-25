@@ -1,0 +1,2 @@
+raw_python_exec "print('hello, world!')"
+set input = raw_python_exec "input('_> ')"
