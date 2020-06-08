@@ -1,6 +1,6 @@
-# Stork
+# AbhiScript
 
-Stork is a hobby project of mine. It is a small programming language. This project is a Python interpreter for Stork. You can look at the grammar for details on the language specification.
+AbhiScript is a hobby project of mine. It is a small programming language. This project is a Python interpreter for AbhiScript. You can look at the grammar for details on the language specification.
 
 ## Getting Started
 
